@@ -57,12 +57,13 @@ header p{margin:0;font-size:.82rem;opacity:.85;}
 #controls{display:flex;justify-content:center;gap:10px;padding:12px;}
 #controls button{font-size:1.3rem;padding:8px 20px;border:none;border-radius:10px;background:var(--accent);color:#fff;cursor:pointer;box-shadow:0 3px 0 #b9532f;}
 #controls button:active{transform:translateY(2px);box-shadow:none;}
-#panel{max-width:640px;margin:0 auto 26px;background:var(--panel);border-radius:14px;padding:20px 22px;box-shadow:0 4px 14px rgba(0,0,0,.15);}
+#panel{max-width:640px;margin:0 auto 26px;background:var(--panel);border-radius:14px;padding:20px 22px;box-shadow:0 4px 14px rgba(0,0,0,.15);transition:max-width .3s;}
+#panel.wide{max-width:96%;width:1100px;}
 #panel h2{margin:0 0 2px;color:var(--accent);}
 #panel .meta{font-size:.85rem;opacity:.75;margin-bottom:10px;}
 #panel ul{margin:6px 0 0;padding-left:20px;}
 #panel li{margin-bottom:4px;font-size:.92rem;}
-.badgesGrid{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;}
+.badgesGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px;margin-top:10px;}
 .achv{background:#fff;color:#22252a;border:2px solid var(--gold);border-radius:10px;padding:6px 10px;font-size:.78rem;display:flex;align-items:center;gap:6px;box-shadow:0 2px 4px rgba(0,0,0,.12);}
 .achv .medal{font-size:1rem;}
 .skillscloud{margin-top:12px;display:flex;flex-wrap:wrap;gap:6px;}
@@ -140,12 +141,14 @@ function render(scroll){
   document.querySelectorAll('.station').forEach((el,i)=>el.classList.toggle('active',i===idx));
   const s=stations[idx];
   if(s.final){
+    panel.classList.add('wide');
     panel.innerHTML=`<h2>${s.t}</h2><div class="meta">${s.c}</div>
       <div class="badgesGrid">${s.achv.map(a=>'<div class="achv"><span class="medal">'+a.slice(0,2)+'</span>'+a.slice(2)+'</div>').join('')}</div>
       <div class="meta" style="margin-top:12px;">Stack técnico</div>
       <div class="skillscloud">${s.skills.map(k=>'<span>'+k+'</span>').join('')}</div>
       <div class="meta" style="margin-top:12px;">Idiomas: Español (nativo) · Inglés (C1)</div>`;
   } else {
+    panel.classList.remove('wide');
     panel.innerHTML=`<h2>${s.t}</h2><div class="meta">${s.c} · ${s.y}</div><ul>${s.b.map(x=>'<li>'+x+'</li>').join('')}</ul>`;
   }
   progress.textContent=`Nivel ${idx+1} de ${stations.length}`;
