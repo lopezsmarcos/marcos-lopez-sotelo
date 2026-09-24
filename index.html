@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Marcos López Sotelo — CV Interactivo</title>
+<style>
+:root{
+  --sky1:#8ecae6; --sky2:#219ebc; --ground:#5a3825; --grass:#4a7c3f;
+  --panel:#fff8e7; --ink:#22252a; --accent:#e76f51; --accent2:#2a9d8f; --gold:#e9b949;
+}
+@media (prefers-color-scheme: dark){
+  :root{ --panel:#1e2127; --ink:#f2ede0; }
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;font-family:'Trebuchet MS',Verdana,sans-serif;background:var(--sky1);color:var(--ink);overflow-x:hidden;}
+body{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);}
+header{text-align:center;padding:18px 12px 10px;background:linear-gradient(var(--sky2),var(--sky1));display:flex;flex-direction:column;align-items:center;gap:8px;}
+#avatar{width:78px;height:78px;border-radius:50%;object-fit:cover;border:4px solid #fff;box-shadow:0 3px 8px rgba(0,0,0,.3);}
+header h1{margin:0;font-size:1.5rem;letter-spacing:1px;}
+header p{margin:0;font-size:.82rem;opacity:.85;}
+#contactBtn{display:inline-block;margin-top:4px;background:var(--accent);color:#fff;text-decoration:none;padding:7px 16px;border-radius:20px;font-size:.85rem;font-weight:bold;box-shadow:0 3px 0 #b9532f;}
+#contactBtn:active{transform:translateY(2px);box-shadow:none;}
+#instructions{text-align:center;font-size:.8rem;padding:4px;opacity:.75;}
+#world{position:relative;height:200px;overflow-x:auto;overflow-y:hidden;background:linear-gradient(var(--sky1),var(--sky2) 70%);border-top:3px solid #fff;border-bottom:3px solid var(--ground);}
+#track{position:relative;height:100%;background:repeating-linear-gradient(90deg,var(--grass) 0 40px,#3f6b35 40px 42px);}
+.station{position:absolute;bottom:0;width:6px;height:70px;background:var(--ground);}
+.station .flag{position:absolute;top:-38px;left:6px;background:var(--accent);color:#fff;font-size:.6rem;padding:3px 6px;border-radius:4px;white-space:nowrap;font-weight:bold;box-shadow:0 2px 4px rgba(0,0,0,.3);}
+.station.active .flag{background:var(--accent2);}
+.station .badge{position:absolute;top:-58px;left:2px;width:20px;height:20px;border-radius:50%;color:#fff;font-size:.55rem;font-weight:bold;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 3px rgba(0,0,0,.3);}
+.station .dot{position:absolute;bottom:70px;left:-6px;width:18px;height:18px;border-radius:50%;background:#fff;border:3px solid var(--accent);}
+.station.active .dot{background:var(--accent2);border-color:#fff;}
+.station.final .dot{background:var(--gold);border-color:#fff;}
+#hero{position:absolute;bottom:70px;width:32px;height:48px;transition:left .5s ease;}
+#hero.walking{animation:bounce .3s infinite alternate;}
+@keyframes bounce{from{transform:translateY(0);}to{transform:translateY(-3px);}}
+#hero .head{width:17px;height:17px;background:#ffd8a8;border-radius:50%;margin:0 auto;position:relative;box-shadow:inset -2px -2px 0 rgba(0,0,0,.08);}
+#hero .hair{position:absolute;top:-3px;left:1px;width:15px;height:9px;background:#3a2a1e;border-radius:9px 9px 0 0;}
+#hero .torso{width:21px;height:19px;background:var(--accent);border-radius:6px;margin:1px auto 0;position:relative;}
+#hero .tie{position:absolute;top:1px;left:8.5px;width:4px;height:11px;background:#c1121f;clip-path:polygon(50% 0,100% 20%,68% 100%,32% 100%,0 20%);}
+#hero .arm{position:absolute;top:1px;width:5px;height:15px;background:#ffd8a8;border-radius:3px;transform-origin:top center;}
+#hero .arm-l{left:-4px;} #hero .arm-r{right:-4px;}
+#hero.walking .arm-l{animation:armL .3s infinite alternate;}
+#hero.walking .arm-r{animation:armR .3s infinite alternate;}
+@keyframes armL{from{transform:rotate(22deg);}to{transform:rotate(-22deg);}}
+@keyframes armR{from{transform:rotate(-22deg);}to{transform:rotate(22deg);}}
+#hero .legs{width:21px;height:14px;margin:0 auto;position:relative;}
+#hero .leg{position:absolute;width:6px;height:14px;background:#2b2f36;border-radius:0 0 3px 3px;top:0;transform-origin:top center;}
+#hero .shoe{position:absolute;bottom:-2px;width:8px;height:4px;background:#111;border-radius:2px;}
+.leg-l{left:1px;} .leg-r{right:1px;}
+.leg-l .shoe{left:-1px;} .leg-r .shoe{right:-1px;}
+#hero.walking .leg-l{animation:step .3s infinite alternate;}
+#hero.walking .leg-r{animation:step .3s infinite alternate-reverse;}
+@keyframes step{from{transform:rotate(-20deg);}to{transform:rotate(20deg);}}
+#controls{display:flex;justify-content:center;gap:10px;padding:12px;}
+#controls button{font-size:1.3rem;padding:8px 20px;border:none;border-radius:10px;background:var(--accent);color:#fff;cursor:pointer;box-shadow:0 3px 0 #b9532f;}
+#controls button:active{transform:translateY(2px);box-shadow:none;}
+#panel{max-width:640px;margin:0 auto 26px;background:var(--panel);border-radius:14px;padding:20px 22px;box-shadow:0 4px 14px rgba(0,0,0,.15);}
+#panel h2{margin:0 0 2px;color:var(--accent);}
+#panel .meta{font-size:.85rem;opacity:.75;margin-bottom:10px;}
+#panel ul{margin:6px 0 0;padding-left:20px;}
+#panel li{margin-bottom:4px;font-size:.92rem;}
+.badgesGrid{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;}
+.achv{background:#fff;color:#22252a;border:2px solid var(--gold);border-radius:10px;padding:6px 10px;font-size:.78rem;display:flex;align-items:center;gap:6px;box-shadow:0 2px 4px rgba(0,0,0,.12);}
+.achv .medal{font-size:1rem;}
+.skillscloud{margin-top:12px;display:flex;flex-wrap:wrap;gap:6px;}
+.skillscloud span{background:var(--accent2);color:#fff;font-size:.72rem;padding:3px 8px;border-radius:12px;}
+#progress{max-width:640px;margin:0 auto;text-align:center;font-size:.8rem;opacity:.7;}
+footer{text-align:center;padding:20px 12px 30px;font-size:.82rem;}
+footer a{color:var(--accent2);font-weight:bold;text-decoration:none;}
+</style>
+</head>
+<body>
+<header>
+  <img id="avatar" src="data:image/jpeg;base64,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" alt="Marcos López Sotelo">
+  <h1>MARCOS LUIS LÓPEZ SOTELO</h1>
+  <p>Project Manager · Buenos Aires, Argentina</p>
+  <a id="contactBtn" href="mailto:lopezsmarcos@gmail.com">✉️ Contactar a Marcos</a>
+</header>
+<div id="instructions">Usá ◀ ▶ o las flechas del teclado para recorrer la carrera de Marcos</div>
+
+<div id="world"><div id="track"></div><div id="hero">
+  <div class="head"><div class="hair"></div></div>
+  <div class="torso"><div class="tie"></div><div class="arm arm-l"></div><div class="arm arm-r"></div></div>
+  <div class="legs"><div class="leg leg-l"><div class="shoe"></div></div><div class="leg leg-r"><div class="shoe"></div></div></div>
+</div></div>
+
+<div id="controls">
+  <button id="prev">◀</button>
+  <button id="next">▶</button>
+</div>
+
+<div id="progress"></div>
+<div id="panel"></div>
+
+<footer>Hecho a mano, sin frameworks — un pequeño juego para contar una trayectoria. · <a href="mailto:lopezsmarcos@gmail.com">✉️ lopezsmarcos@gmail.com</a></footer>
+
+<script>
+const stations = [
+ {y:"2025–hoy",t:"Project Manager",c:"Accenture",b:["Portfolio Corporate Systems & Banking, gestión de demanda","8 proyectos activos (152k€–1M€), liderazgo Agile/Scrum + IA"]},
+ {y:"2023–25",t:"Project Manager",c:"Santander UK",b:["Producto y tecnología en Lending & Mortgages","Integración de CRM, Credit Decisioning y Core Banking"]},
+ {y:"2022–23",t:"Global Business IT System Developer",c:"Telefónica",b:["Servicio del módulo de Inventario — plataforma Telco 3.0","Coordinación de equipos funcionales y técnicos, UML/Jira"]},
+ {y:"2021–22",t:"Technical Project Manager",c:"SweatWorks",b:["Product backlog junto al Product Owner","Facilitación de eventos Scrum y mentoring del equipo"]},
+ {y:"2018–21",t:"IT Project Manager",c:"PwC",b:["RFP/RFI, alineación de IT con Blockchain, IoT y Cloud","Migraciones de sistemas y auditoría tecnológica"]},
+ {y:"2014–15",t:"Technical Developer",c:"Universidad de Belgrano",b:["Reingeniería de sistema contable en ASP.NET (C#)","Diseño con Enterprise Architect, stored procedures y AJAX"]},
+ {y:"2010–18",t:"Business System Analyst",c:"IBM IT",b:["Gestión de proyectos, SQL y desarrollo en Java","Base de conocimiento y priorización de incidentes"]},
+ {y:"2010–14",t:"Technical Developer",c:"College ORT Argentina",b:["Desarrollo ASP.NET / SQL Server, soporte a usuarios","Diseño y documentación con UML y casos de prueba"]},
+ {y:"2009–10",t:"Business System Analyst",c:"American Express",b:["Programación ASP.NET, SQL Server y JavaScript","Modelado de datos, prototipos y metodologías ágiles"]},
+ {y:"2008–09",t:"Technical Functional Analyst",c:"Johnson & Johnson",b:["Proyecto Global HR Transformation (SAP-R3)","Migración Velocity (XP→Vista) y Customer to Cash (LatAm)"]},
+ {y:"2008",t:"Global Operator",c:"IBM",b:["Operación de Mainframe y sistemas distribuidos (Z/OS2, JCL, RACF)","Monitoreo de servidores Unix/Windows y gestión de tickets"]},
+ {y:"2007–08",t:"Functional Analyst",c:"Banco Mariva",b:["Sistemas vinculados a mercados financieros (MAE, OCT, ROFEX)","Planes de testing, documentación y soporte a usuarios"]},
+ {y:"2005–07",t:"Functional Analyst",c:"MAE",b:["Relevamiento y documentación de requerimientos de software","Planes de capacitación y manuales de usuario"]},
+ {y:"★ Bonus",t:"Logros desbloqueados",c:"Educación & Certificaciones",final:true,
+   achv:["🎓 Universidad Austral — IT Management","🏆 Scrum Master (IBM & J&J)","📊 Power BI (Crehana)","🎯 OKRs (ITBA)","🤖 UiPath & Liderazgo (Udemy)","✅ CMMI/TMMI (Universidad CAECE)"],
+   skills:["SAP","UML","Oracle SQL","JIRA","Java","Linux","Postman","Spring MVC","Hibernate","BootStrap","jQuery","CSS3","Enterprise Architect"]}
+];
+const track=document.getElementById('track'), hero=document.getElementById('hero'),
+      panel=document.getElementById('panel'), progress=document.getElementById('progress'),
+      world=document.getElementById('world');
+const GAP=110, START=40;
+let idx=0;
+function colorFor(str){let h=0;for(const ch of str)h=ch.charCodeAt(0)+((h<<5)-h);const hue=Math.abs(h)%360;return `hsl(${hue},55%,42%)`;}
+function initials(str){return str.split(/\s|&/).filter(Boolean).slice(0,2).map(w=>w[0]).join('').toUpperCase();}
+stations.forEach((s,i)=>{
+  const st=document.createElement('div');
+  st.className='station'+(s.final?' final':'');
+  st.style.left=(START+i*GAP)+'px';
+  const badgeHtml = s.final ? '⭐' : initials(s.c);
+  const badgeColor = s.final ? 'var(--gold)' : colorFor(s.c);
+  st.innerHTML=`<div class="dot"></div><div class="badge" style="background:${badgeColor}">${badgeHtml}</div><div class="flag">${s.y}</div>`;
+  st.onclick=()=>{idx=i;render(true);};
+  track.appendChild(st);
+});
+track.style.width=(START+stations.length*GAP+60)+'px';
+
+function render(scroll){
+  hero.style.left=(START+idx*GAP-7)+'px';
+  document.querySelectorAll('.station').forEach((el,i)=>el.classList.toggle('active',i===idx));
+  const s=stations[idx];
+  if(s.final){
+    panel.innerHTML=`<h2>${s.t}</h2><div class="meta">${s.c}</div>
+      <div class="badgesGrid">${s.achv.map(a=>'<div class="achv"><span class="medal">'+a.slice(0,2)+'</span>'+a.slice(2)+'</div>').join('')}</div>
+      <div class="meta" style="margin-top:12px;">Stack técnico</div>
+      <div class="skillscloud">${s.skills.map(k=>'<span>'+k+'</span>').join('')}</div>
+      <div class="meta" style="margin-top:12px;">Idiomas: Español (nativo) · Inglés (C1)</div>`;
+  } else {
+    panel.innerHTML=`<h2>${s.t}</h2><div class="meta">${s.c} · ${s.y}</div><ul>${s.b.map(x=>'<li>'+x+'</li>').join('')}</ul>`;
+  }
+  progress.textContent=`Nivel ${idx+1} de ${stations.length}`;
+  if(scroll) world.scrollTo({left:Math.max(0,START+idx*GAP-world.clientWidth/2),behavior:'smooth'});
+  hero.classList.add('walking');
+  clearTimeout(window._w); window._w=setTimeout(()=>hero.classList.remove('walking'),450);
+}
+function move(d){ idx=Math.min(stations.length-1,Math.max(0,idx+d)); render(true); }
+document.getElementById('next').onclick=()=>move(1);
+document.getElementById('prev').onclick=()=>move(-1);
+window.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight')move(1);
+  if(e.key==='ArrowLeft')move(-1);
+});
+render(false);
+</script>
+</body>
+</html>
